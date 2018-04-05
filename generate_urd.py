@@ -1,4 +1,5 @@
 import urd.urd
+from urd.urd import IoType
 import optparse
 import os
 
@@ -19,9 +20,10 @@ output_file = open(options.output_file, 'w')
 
 for line in trace_lines:
     parts = line.split()
-    output_file.write(str(parts[0]) + " ")
-    output_file.write(str(parts[1]) + " ")
-    output_file.write(str(urd_instance.access(parts[0])))
-    output_file.write("\n")
+    io_type = IoType.read if parts[1].lower() == "r" else IoType.write
+    urd_instance.access(parts[0], io_type)
 
+
+urd_instance.finish()
+urd_instance.print_data()
 output_file.close()

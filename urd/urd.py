@@ -1,17 +1,36 @@
 from typing import Dict
+from urd_object import UrdObject
+from enum import Enum
+
+
+class IoType(Enum):
+    read = 0
+    write = 1
 
 
 class Urd(object):
     def __init__(self):
-        self.seq_number = 0
-        self.map = dict()  # type: Dict[int, int]
+        self.urd_object = dict()  # type: Dict[int, UrdObject]
 
-    def access(self, address):
+    def access(self, address, io_type):
         try:
-            urd = self.seq_number - self.map[address] - 1
-            self.map[address] = self.seq_number
+            urd_object = self.urd_object[address]
         except KeyError:
-            urd = -1
-            self.map[address] = self.seq_number
-        self.seq_number += 1
-        return urd
+            for key, value in self.urd_object.iteritems():
+                value.add(address)
+            self.urd_object[address] = UrdObject()
+            return
+
+        if io_type == IoType.write:
+            urd_object.reset_urd()
+            return
+
+        self.urd_object[address].initialize_next()
+
+    def finish(self):
+        for key, value in self.urd_object.iteritems():
+            value.initialize_next()
+
+    def print_data(self):
+        for key, value in sorted(self.urd_object.iteritems()):
+            print("%s %s %s" % (key, value.get_count(), value.get_frequency()))
