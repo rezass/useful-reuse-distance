@@ -23,7 +23,5 @@ for line in trace_lines:
     io_type = IoType.read if parts[1].lower() == "r" else IoType.write
     urd_instance.access(parts[0], io_type)
 
-
-urd_instance.finish()
 urd_instance.print_data()
 output_file.close()

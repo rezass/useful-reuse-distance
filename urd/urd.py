@@ -16,10 +16,12 @@ class Urd(object):
         try:
             urd_object = self.urd_object[address]
         except KeyError:
-            for key, value in self.urd_object.iteritems():
-                value.add(address)
             self.urd_object[address] = UrdObject()
             return
+        finally:
+            for key, value in self.urd_object.iteritems():
+                if key != address:
+                    value.add(address)
 
         if io_type == IoType.write:
             urd_object.reset_urd()
