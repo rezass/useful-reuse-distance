@@ -35,4 +35,4 @@ class Urd(object):
 
     def print_data(self):
         for key, value in sorted(self.urd_object.iteritems()):
-            print("%s %s %s" % (key, value.get_count(), value.get_frequency()))
+            print("%s: avg: %s, count: %s" % (key, value.get_average(), value.get_count()))
